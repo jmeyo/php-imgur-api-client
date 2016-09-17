@@ -12,6 +12,30 @@ namespace Imgur\Api;
 class Account extends AbstractApi
 {
     /**
+     * Validate that the response is correct to create the model.
+     *
+     * @param  array $parameters Keys: data, success
+     *
+     * @return boolean
+     */
+    private function validateResponse($parameters)
+    {
+        if (false === $parameters['success']) {
+            return false;
+        }
+
+        if (!empty($parameters['data'])) {
+            $parameters = $parameters['data'];
+        }
+
+        if (!isset($parameters['id'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Request standard user information.
      *
      * @param string $username
@@ -21,6 +45,10 @@ class Account extends AbstractApi
     public function base($username = 'me')
     {
         $parameters = $this->get('account/' . $username);
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\Account($parameters);
     }
@@ -36,6 +64,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->post('account/' . $username, $recaptchaInformation);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Account($parameters);
     }
 
@@ -50,6 +82,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->delete('account/' . $username);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -63,6 +99,10 @@ class Account extends AbstractApi
     public function galleryFavorites($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/gallery_favorites');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         $images = array();
 
@@ -88,6 +128,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/favorites');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         $images = array();
 
         foreach ($parameters['data'] as $parameter) {
@@ -112,6 +156,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/submissions');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         $images = array();
 
         foreach ($parameters['data'] as $parameter) {
@@ -133,6 +181,10 @@ class Account extends AbstractApi
     public function settings($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/settings');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\AccountSettings($parameters);
     }
@@ -170,6 +222,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/stats');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\AccountStatistics($parameters);
     }
 
@@ -183,6 +239,10 @@ class Account extends AbstractApi
     public function accountGalleryProfile($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/gallery_profile');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         if (!empty($parameters['data'])) {
             $parameters = $parameters['data'];
@@ -202,6 +262,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/verifyemail');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -213,6 +277,10 @@ class Account extends AbstractApi
     public function sendVerificationEmail($username = 'me')
     {
         $parameters = $this->post('account/' . $username . '/verifyemail');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\Basic($parameters);
     }
@@ -229,6 +297,10 @@ class Account extends AbstractApi
     public function albums($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/albums');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         if (empty($parameters['data'])) {
             throw new \Imgur\Exception\RuntimeException('An error occured while attempting to retrieve albums for ' . $username . ':' . $parameters['error']['message']);
@@ -256,6 +328,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/album/' . $albumId);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Album($parameters['data']);
     }
 
@@ -270,6 +346,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/albums/ids');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -283,6 +363,10 @@ class Account extends AbstractApi
     public function albumCount($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/albums/count');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\Basic($parameters);
     }
@@ -299,6 +383,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->delete('account/' . $username . '/album/' . $albumId);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -312,6 +400,10 @@ class Account extends AbstractApi
     public function comments($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/comments');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         $comments = array();
 
@@ -335,6 +427,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/comment/' . $commentId);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Comment($parameters['data']);
     }
 
@@ -349,6 +445,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/comments/ids');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -362,6 +462,10 @@ class Account extends AbstractApi
     public function commentCount($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/comments/count');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\Basic($parameters);
     }
@@ -378,6 +482,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->delete('account/' . $username . '/comment/' . $commentId);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -392,6 +500,10 @@ class Account extends AbstractApi
     public function images($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/images');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         $images = array();
 
@@ -415,6 +527,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/image/' . $imageId);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Image($parameters['data']);
     }
 
@@ -429,6 +545,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->get('account/' . $username . '/images/ids');
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -442,6 +562,10 @@ class Account extends AbstractApi
     public function imageCount($username = 'me')
     {
         $parameters = $this->get('account/' . $username . '/images/count');
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         return new Model\Basic($parameters);
     }
@@ -458,6 +582,10 @@ class Account extends AbstractApi
     {
         $parameters = $this->delete('account/' . $username . '/image/' . $deleteHash);
 
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
+
         return new Model\Basic($parameters);
     }
 
@@ -472,6 +600,10 @@ class Account extends AbstractApi
     public function replies($username = 'me', $onlyNew = false)
     {
         $parameters = $this->get('account/' . $username . '/notifications/replies?new=' . var_export($onlyNew, true));
+
+        if (false === $this->validateResponse($parameters)) {
+            return false;
+        }
 
         $replies = array();
 
